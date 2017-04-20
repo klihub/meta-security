@@ -20,8 +20,12 @@ do_create_wrapper () {
 #
 # Wrapper around swtpm_setup.sh which adds parameters required to
 # run the setup as non-root directly from the native sysroot.
+# Native installations ignore usrmerge but the sbindir and bindir
+# paths are set up according to usrmerge. The second PATH extenstion
+# is a workaround for this.
 
 PATH="${bindir}:${base_bindir}:${sbindir}:${base_sbindir}:\$PATH"
+PATH="${base_sbindir%/usr/sbin}/sbin:${base_bindir%/usr/bin}/bin:\$PATH"
 export PATH
 
 # tcsd only allows to be run as root or tss. Pretend to be root...
@@ -37,8 +41,12 @@ EOF
 #
 # Wrapper around $exe which makes it easier to invoke
 # the right binary.
+# Native installations ignore usrmerge but the sbindir and bindir
+# paths are set up according to usrmerge. The second PATH extenstion
+# is a workaround for this.
 
 PATH="${bindir}:${base_bindir}:${sbindir}:${base_sbindir}:\$PATH"
+PATH="${base_sbindir%/usr/sbin}/sbin:${base_bindir%/usr/bin}/bin:\$PATH"
 export PATH
 
 exec ${exe} "\$@"
